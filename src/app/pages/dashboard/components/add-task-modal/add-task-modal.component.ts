@@ -25,7 +25,7 @@ export class AddTaskModalComponent {
   readonly submitError: WritableSignal<string | null> = signal<string | null>(null);
   readonly loading: WritableSignal<boolean> = signal<boolean>(false);
 
-  readonly taskForm: FormGroup = new FormGroup({
+  readonly taskForm = new FormGroup({
     title: new FormControl<string>('', {nonNullable: true, validators: [Validators.required]}),
     priority: new FormControl<TaskPriority>(TaskPriority.High, {nonNullable: true}),
     status: new FormControl<TaskStatus>('todo', {nonNullable: true})
@@ -59,6 +59,7 @@ export class AddTaskModalComponent {
   }
 
   close(): void {
+    this.taskForm.reset();
     this.closed.emit();
   }
 }

@@ -15,7 +15,7 @@
           formControlName="title"
           placeholder="תאר את המשימה..."
         />
-        @if (taskForm.controls['title'].invalid && taskForm.controls['title'].touched) {
+        @if (taskForm.controls.title.invalid && taskForm.controls.title.touched) {
           <span class="field-error">שדה חובה</span>
         }
       </div>

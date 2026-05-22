@@ -1,14 +1,16 @@
-import {Injectable, signal, computed, WritableSignal, Signal} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import { Injectable, signal, computed, WritableSignal, Signal } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  readonly loggedInUser: WritableSignal<User | null> = signal<User | null>(this.loadFromSession());
-  readonly isAuthenticated: Signal<boolean> = computed(() => this.loggedInUser() !== null);
-  readonly token: Signal<string | null> = computed(() => this.loggedInUser()?.token ?? null);
+  private readonly _loggedInUser: WritableSignal<User | null> = signal<User | null>(this.loadFromSession());
+
+  readonly loggedInUser: Signal<User | null> = this._loggedInUser.asReadonly();
+  readonly isAuthenticated: Signal<boolean> = computed(() => this._loggedInUser() !== null);
+  readonly token: Signal<string | null> = computed(() => this._loggedInUser()?.token ?? null);
 
   constructor(private http: HttpClient) {}
 
@@ -25,14 +27,15 @@ export class AuthService {
           return users[0];
         }),
         tap((user: User) => {
-          this.loggedInUser.set(user);
-          sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+          this._loggedInUser.set(user);
+          const { password: _, ...safeUser } = user;
+          sessionStorage.setItem('loggedInUser', JSON.stringify(safeUser));
         })
       );
   }
 
   logout(): void {
-    this.loggedInUser.set(null);
+    this._loggedInUser.set(null);
     sessionStorage.removeItem('loggedInUser');
   }
 

@@ -31,7 +31,6 @@
     } @else {
       <div class="kanban">
 
-        <!-- TODO TASKS -->
         <div class="kanban-col">
           <div class="col-header">
             <span class="col-title">לביצוע</span>
@@ -39,41 +38,18 @@
           </div>
           <div class="col-body">
             @for (task of todoTasks(); track task.id) {
-              <div [class]="'task-card ' + task.priority">
-                <p class="task-title">{{ task.title }}</p>
-                <div class="card-footer">
-                  <span [class]="'priority-badge ' + task.priority">{{ priorityLabel(task.priority) }}</span>
-                  <div class="card-footer-end">
-                    <select class="status-select" [value]="task.status"
-                            (change)="updateStatus(task, $any($event.target).value)">
-                      <option value="todo">לביצוע</option>
-                      <option value="in-progress">בביצוע</option>
-                      <option value="done">הושלם</option>
-                    </select>
-                    <button class="delete-btn" type="button" (click)="deleteTask(task.id)"
-                            [disabled]="deletingTaskId() === task.id">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
-                           fill="none" stroke="currentColor" stroke-width="2"
-                           stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                        <path d="M10 11v6"/><path d="M14 11v6"/>
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                @if (taskErrors()[task.id]) {
-                  <p class="task-error">{{ taskErrors()[task.id] }}</p>
-                }
-              </div>
+              <app-task-card
+                [task]="task"
+                [isDeleting]="deletingTaskId() === task.id"
+                (statusChange)="updateStatus(task, $event)"
+                (deleteRequested)="deleteTask(task)"
+              />
             } @empty {
               <p class="empty-col">אין משימות</p>
             }
           </div>
         </div>
 
-        <!-- IN PROGRESS TASKS -->
         <div class="kanban-col">
           <div class="col-header">
             <span class="col-title">בביצוע</span>
@@ -81,41 +57,18 @@
           </div>
           <div class="col-body">
             @for (task of inProgressTasks(); track task.id) {
-              <div [class]="'task-card ' + task.priority">
-                <p class="task-title">{{ task.title }}</p>
-                <div class="card-footer">
-                  <span [class]="'priority-badge ' + task.priority">{{ priorityLabel(task.priority) }}</span>
-                  <div class="card-footer-end">
-                    <select class="status-select" [value]="task.status"
-                            (change)="updateStatus(task, $any($event.target).value)">
-                      <option value="todo">לביצוע</option>
-                      <option value="in-progress">בביצוע</option>
-                      <option value="done">הושלם</option>
-                    </select>
-                    <button class="delete-btn" type="button" (click)="deleteTask(task.id)"
-                            [disabled]="deletingTaskId() === task.id">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
-                           fill="none" stroke="currentColor" stroke-width="2"
-                           stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                        <path d="M10 11v6"/><path d="M14 11v6"/>
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                @if (taskErrors()[task.id]) {
-                  <p class="task-error">{{ taskErrors()[task.id] }}</p>
-                }
-              </div>
+              <app-task-card
+                [task]="task"
+                [isDeleting]="deletingTaskId() === task.id"
+                (statusChange)="updateStatus(task, $event)"
+                (deleteRequested)="deleteTask(task)"
+              />
             } @empty {
               <p class="empty-col">אין משימות</p>
             }
           </div>
         </div>
 
-        <!-- COMPLETED/DONE TASKS -->
         <div class="kanban-col">
           <div class="col-header">
             <span class="col-title">הושלם</span>
@@ -123,44 +76,30 @@
           </div>
           <div class="col-body">
             @for (task of doneTasks(); track task.id) {
-              <div [class]="'task-card ' + task.priority">
-                <p class="task-title">{{ task.title }}</p>
-                <div class="card-footer">
-                  <span [class]="'priority-badge ' + task.priority">{{ priorityLabel(task.priority) }}</span>
-                  <div class="card-footer-end">
-                    <select class="status-select" [value]="task.status"
-                            (change)="updateStatus(task, $any($event.target).value)">
-                      <option value="todo">לביצוע</option>
-                      <option value="in-progress">בביצוע</option>
-                      <option value="done">הושלם</option>
-                    </select>
-                    <button class="delete-btn" type="button" (click)="deleteTask(task.id)"
-                            [disabled]="deletingTaskId() === task.id">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
-                           fill="none" stroke="currentColor" stroke-width="2"
-                           stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                        <path d="M10 11v6"/><path d="M14 11v6"/>
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                @if (taskErrors()[task.id]) {
-                  <p class="task-error">{{ taskErrors()[task.id] }}</p>
-                }
-              </div>
+              <app-task-card
+                [task]="task"
+                [isDeleting]="deletingTaskId() === task.id"
+                (statusChange)="updateStatus(task, $event)"
+                (deleteRequested)="deleteTask(task)"
+              />
             } @empty {
               <p class="empty-col">אין משימות</p>
             }
           </div>
         </div>
+
       </div>
     }
   </main>
 
   @if (isModalOpen()) {
     <app-add-task-modal (closed)="closeModal()"/>
+  }
+
+  @if (actionError()) {
+    <div class="error-toast">
+      <span>{{ actionError() }}</span>
+      <button class="error-toast-close" type="button" (click)="dismissError()">✕</button>
+    </div>
   }
 </div>

@@ -168,108 +168,39 @@
   min-height: 80px;
 }
 
-.task-card {
+.error-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   background-color: $surface;
+  border: 1px solid rgba($danger, 0.35);
+  border-right: 4px solid $danger;
   border-radius: 8px;
-  padding: 0.75rem 0.5rem 0.75rem 0.875rem;
-  box-shadow: 0 1px 3px $shadow;
-  border-right: 4px solid $border;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  &.high { border-right-color: $p-high; }
-  &.medium { border-right-color: $p-medium; }
-  &.low { border-right-color: $p-low; }
-}
-
-.task-title {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 0.75rem 1rem;
   font-size: 0.875rem;
-  font-weight: 500;
   color: $text;
-  margin: 0;
-  line-height: 1.4;
+  direction: rtl;
+  z-index: 200;
 }
 
-.card-footer-end {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-}
-
-.delete-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.error-toast-close {
   background: none;
-  border: 1px solid transparent;
-  color: rgba($secondary, 0.45);
-  cursor: pointer;
-  padding: 0.15rem;
-  border-radius: 4px;
-  line-height: 1;
-  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
-
-  &:hover:not(:disabled) {
-    color: $danger;
-    border-color: rgba($danger, 0.3);
-    background-color: rgba($danger, 0.06);
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-}
-
-.card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  direction: rtl;
-}
-
-.priority-badge {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-
-  &.high { background-color: rgba($p-high, 0.1); color: $p-high; }
-  &.medium { background-color: rgba($p-medium, 0.1); color: $p-medium; }
-  &.low { background-color: rgba($p-low, 0.1); color: $p-low; }
-}
-
-.status-select {
-  font-size: 0.7rem;
-  font-family: inherit;
+  border: none;
+  font-size: 0.75rem;
   color: $secondary;
-  background-color: transparent;
-  border: 1px solid $border;
-  border-radius: 4px;
-  padding: 0.15rem 0.375rem;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-  direction: rtl;
-
-  &:focus {
-    outline: none;
-    border-color: $primary;
-    color: $text;
-  }
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
 
   &:hover {
-    border-color: color.adjust($border, $lightness: -15%);
     color: $text;
   }
-}
-
-.task-error {
-  font-size: 0.7rem;
-  color: $danger;
-  margin: 0.25rem 0 0;
-  text-align: center;
 }
 
 .empty-col {

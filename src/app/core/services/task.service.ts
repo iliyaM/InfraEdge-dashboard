@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, WritableSignal } from '@angular/core';
+import { Injectable, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Task, TaskStatus } from '../interfaces/task.interface';
@@ -8,23 +8,27 @@ import { environment } from '../../../environments/environment';
 export class TaskService {
   private http: HttpClient = inject(HttpClient);
 
-  readonly tasks: WritableSignal<Task[]> = signal<Task[]>([]);
-  readonly loading: WritableSignal<boolean> = signal<boolean>(false);
-  readonly error: WritableSignal<string | null> = signal<string | null>(null);
+  private readonly _tasks: WritableSignal<Task[]> = signal<Task[]>([]);
+  private readonly _loading: WritableSignal<boolean> = signal<boolean>(false);
+  private readonly _error: WritableSignal<string | null> = signal<string | null>(null);
+
+  readonly tasks: Signal<Task[]> = this._tasks.asReadonly();
+  readonly loading: Signal<boolean> = this._loading.asReadonly();
+  readonly error: Signal<string | null> = this._error.asReadonly();
 
   loadTasksByUser(userId: number | string): void {
-    this.loading.set(true);
-    this.error.set(null);
+    this._loading.set(true);
+    this._error.set(null);
     this.http
       .get<Task[]>(`${environment.apiUrl}/tasks`, { params: { userId } })
       .subscribe({
         next: (tasks: Task[]) => {
-          this.tasks.set(tasks);
-          this.loading.set(false);
+          this._tasks.set(tasks);
+          this._loading.set(false);
         },
         error: () => {
-          this.error.set('שגיאה בטעינת המשימות. נסה לרענן את הדף.');
-          this.loading.set(false);
+          this._error.set('שגיאה בטעינת המשימות. נסה לרענן את הדף.');
+          this._loading.set(false);
         }
       });
   }
@@ -32,14 +36,14 @@ export class TaskService {
   createTask(task: Omit<Task, 'id'>): Observable<Task> {
     return this.http
       .post<Task>(`${environment.apiUrl}/tasks`, task)
-      .pipe(tap((newTask: Task) => this.tasks.update((all: Task[]) => [...all, newTask])));
+      .pipe(tap((newTask: Task) => this._tasks.update((all: Task[]) => [...all, newTask])));
   }
 
   updateTaskStatus(id: string, status: TaskStatus): Observable<Task> {
     return this.http
       .patch<Task>(`${environment.apiUrl}/tasks/${id}`, { status })
       .pipe(tap((updated: Task) =>
-        this.tasks.update((all: Task[]) => all.map((t: Task) => t.id === id ? updated : t))
+        this._tasks.update((all: Task[]) => all.map((t: Task) => t.id === id ? updated : t))
       ));
   }
 
@@ -47,7 +51,7 @@ export class TaskService {
     return this.http
       .delete<void>(`${environment.apiUrl}/tasks/${id}`)
       .pipe(tap(() =>
-        this.tasks.update((all: Task[]) => all.filter((t: Task) => t.id !== id))
+        this._tasks.update((all: Task[]) => all.filter((t: Task) => t.id !== id))
       ));
   }
 }

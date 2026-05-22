@@ -6,11 +6,12 @@ import { TaskService } from '../../core/services/task.service';
 import { Task, TaskPriority, TaskStatus } from '../../core/interfaces/task.interface';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { AddTaskModalComponent } from './components/add-task-modal/add-task-modal.component';
+import { TaskCardComponent } from './components/task-card/task-card.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, AddTaskModalComponent],
+  imports: [HeaderComponent, AddTaskModalComponent, TaskCardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -24,7 +25,7 @@ export class DashboardComponent implements OnInit {
 
   readonly priorityFilter: WritableSignal<TaskPriority | null> = signal<TaskPriority | null>(null);
   readonly isModalOpen: WritableSignal<boolean> = signal<boolean>(false);
-  readonly taskErrors: WritableSignal<Record<string, string>> = signal<Record<string, string>>({});
+  readonly actionError: WritableSignal<string | null> = signal<string | null>(null);
   readonly deletingTaskId: WritableSignal<string | null> = signal<string | null>(null);
 
   readonly filteredTasks: Signal<Task[]> = computed(() => {
@@ -51,41 +52,26 @@ export class DashboardComponent implements OnInit {
     this.priorityFilter.set(priority);
   }
 
-  priorityLabel(priority: TaskPriority): string {
-    return {
-      [TaskPriority.High]: 'גבוהה',
-      [TaskPriority.Medium]: 'בינונית',
-      [TaskPriority.Low]: 'נמוכה'
-    }[priority];
-  }
-
   updateStatus(task: Task, status: TaskStatus): void {
     this.taskService.updateTaskStatus(task.id, status)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({ error: () => this.setTaskError(task.id, 'עדכון הסטטוס נכשל') });
+      .subscribe({ error: () => this.actionError.set(`"${task.title}" לא עודכן, נסה שוב`) });
   }
 
-  deleteTask(taskId: string): void {
-    this.deletingTaskId.set(taskId);
-    this.taskService.deleteTask(taskId)
+  deleteTask(task: Task): void {
+    this.deletingTaskId.set(task.id);
+    this.taskService.deleteTask(task.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         error: () => {
           this.deletingTaskId.set(null);
-          this.setTaskError(taskId, 'מחיקת המשימה נכשלה');
+          this.actionError.set(`"${task.title}" לא הוסר, נסה שוב`);
         }
       });
   }
 
-  private setTaskError(taskId: string, message: string): void {
-    this.taskErrors.update((errors: Record<string, string>) => ({ ...errors, [taskId]: message }));
-    setTimeout(() => {
-      this.taskErrors.update((errors: Record<string, string>) => {
-        const next: Record<string, string> = { ...errors };
-        delete next[taskId];
-        return next;
-      });
-    }, 4000);
+  dismissError(): void {
+    this.actionError.set(null);
   }
 
   openModal(): void {

@@ -36,12 +36,12 @@
         }
       </div>
 
-      @if (error) {
-        <div class="alert" role="alert">{{ error }}</div>
+      @if (error()) {
+        <div class="alert" role="alert">{{ error() }}</div>
       }
 
-      <button type="submit" [disabled]="loading" class="submit-btn">
-        {{ loading ? 'מתחבר...' : 'התחבר' }}
+      <button type="submit" [disabled]="loading()" class="submit-btn">
+        {{ loading() ? 'מתחבר...' : 'התחבר' }}
       </button>
     </form>
   </div>
