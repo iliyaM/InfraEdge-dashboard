@@ -1,0 +1,54 @@
+<div class="backdrop">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3 class="modal-title">משימה חדשה</h3>
+      <button class="close-btn" type="button" (click)="close()">✕</button>
+    </div>
+
+    <form [formGroup]="taskForm" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="title">כותרת</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="תאר את המשימה..."
+        />
+        @if (taskForm.controls['title'].invalid && taskForm.controls['title'].touched) {
+          <span class="field-error">שדה חובה</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="priority">עדיפות</label>
+        <select id="priority" formControlName="priority">
+          <option [value]="TaskPriority.High">גבוהה</option>
+          <option [value]="TaskPriority.Medium">בינונית</option>
+          <option [value]="TaskPriority.Low">נמוכה</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="status">סטטוס</label>
+        <select id="status" formControlName="status">
+          <option value="todo">לביצוע</option>
+          <option value="in-progress">בביצוע</option>
+          <option value="done">הושלם</option>
+        </select>
+      </div>
+
+      @if (submitError()) {
+        <div class="submit-error">{{ submitError() }}</div>
+      }
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="close()">ביטול</button>
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          {{ loading() ? 'שומר...' : 'צור משימה' }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>

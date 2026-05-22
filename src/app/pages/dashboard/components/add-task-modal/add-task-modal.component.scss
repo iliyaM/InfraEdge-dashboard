@@ -1,0 +1,145 @@
+@use 'sass:color';
+@use '../../../../../styles/colors' as *;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  background-color: $surface;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+  padding: 2rem;
+  width: 100%;
+  max-width: 440px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: $text;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: $secondary;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+
+  &:hover {
+    color: $text;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $label;
+    margin-bottom: 0.375rem;
+  }
+
+  input,
+  select {
+    padding: 0.625rem 0.875rem;
+    border: 1.5px solid $border;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: $input-bg;
+    color: $text;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      background-color: $surface;
+      box-shadow: 0 0 0 3px rgba($primary, 0.15);
+    }
+  }
+}
+
+.field-error {
+  font-size: 0.8rem;
+  color: $danger;
+  margin-top: 0.3rem;
+}
+
+.submit-error {
+  background-color: rgba($danger, 0.05);
+  border: 1px solid rgba($danger, 0.35);
+  border-radius: 8px;
+  color: $danger;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1.25rem;
+  border: 1.5px solid $border;
+  border-radius: 8px;
+  background-color: transparent;
+  color: $secondary;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  &:hover {
+    border-color: $text;
+    color: $text;
+  }
+}
+
+.btn-submit {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background-color: $primary;
+  color: $surface;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($primary, $lightness: -8%);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}

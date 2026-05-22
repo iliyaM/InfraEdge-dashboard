@@ -1,0 +1,166 @@
+<div class="dashboard">
+  <app-header/>
+
+  <main class="main">
+    <div class="toolbar">
+      <div class="toolbar-top">
+        <h2 class="board-title">המשימות שלי</h2>
+        <button class="new-task-btn" (click)="openModal()">+ משימה חדשה</button>
+      </div>
+      <div class="filters-row">
+        <span class="filter-label">עדיפות</span>
+        <div class="filters">
+          <button class="filter-btn" [class.active]="priorityFilter() === null" (click)="setFilter(null)">הכל</button>
+          <button class="filter-btn high" [class.active]="priorityFilter() === TaskPriority.High"
+                  (click)="setFilter(TaskPriority.High)">גבוהה
+          </button>
+          <button class="filter-btn medium" [class.active]="priorityFilter() === TaskPriority.Medium"
+                  (click)="setFilter(TaskPriority.Medium)">בינונית
+          </button>
+          <button class="filter-btn low" [class.active]="priorityFilter() === TaskPriority.Low"
+                  (click)="setFilter(TaskPriority.Low)">נמוכה
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (taskService.loading()) {
+      <div class="state-msg">טוען משימות...</div>
+    } @else if (taskService.error()) {
+      <div class="state-msg error">{{ taskService.error() }}</div>
+    } @else {
+      <div class="kanban">
+
+        <!-- TODO TASKS -->
+        <div class="kanban-col">
+          <div class="col-header">
+            <span class="col-title">לביצוע</span>
+            <span class="col-count">{{ todoTasks().length }}</span>
+          </div>
+          <div class="col-body">
+            @for (task of todoTasks(); track task.id) {
+              <div [class]="'task-card ' + task.priority">
+                <p class="task-title">{{ task.title }}</p>
+                <div class="card-footer">
+                  <span [class]="'priority-badge ' + task.priority">{{ priorityLabel(task.priority) }}</span>
+                  <div class="card-footer-end">
+                    <select class="status-select" [value]="task.status"
+                            (change)="updateStatus(task, $any($event.target).value)">
+                      <option value="todo">לביצוע</option>
+                      <option value="in-progress">בביצוע</option>
+                      <option value="done">הושלם</option>
+                    </select>
+                    <button class="delete-btn" type="button" (click)="deleteTask(task.id)"
+                            [disabled]="deletingTaskId() === task.id">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2"
+                           stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                @if (taskErrors()[task.id]) {
+                  <p class="task-error">{{ taskErrors()[task.id] }}</p>
+                }
+              </div>
+            } @empty {
+              <p class="empty-col">אין משימות</p>
+            }
+          </div>
+        </div>
+
+        <!-- IN PROGRESS TASKS -->
+        <div class="kanban-col">
+          <div class="col-header">
+            <span class="col-title">בביצוע</span>
+            <span class="col-count">{{ inProgressTasks().length }}</span>
+          </div>
+          <div class="col-body">
+            @for (task of inProgressTasks(); track task.id) {
+              <div [class]="'task-card ' + task.priority">
+                <p class="task-title">{{ task.title }}</p>
+                <div class="card-footer">
+                  <span [class]="'priority-badge ' + task.priority">{{ priorityLabel(task.priority) }}</span>
+                  <div class="card-footer-end">
+                    <select class="status-select" [value]="task.status"
+                            (change)="updateStatus(task, $any($event.target).value)">
+                      <option value="todo">לביצוע</option>
+                      <option value="in-progress">בביצוע</option>
+                      <option value="done">הושלם</option>
+                    </select>
+                    <button class="delete-btn" type="button" (click)="deleteTask(task.id)"
+                            [disabled]="deletingTaskId() === task.id">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2"
+                           stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                @if (taskErrors()[task.id]) {
+                  <p class="task-error">{{ taskErrors()[task.id] }}</p>
+                }
+              </div>
+            } @empty {
+              <p class="empty-col">אין משימות</p>
+            }
+          </div>
+        </div>
+
+        <!-- COMPLETED/DONE TASKS -->
+        <div class="kanban-col">
+          <div class="col-header">
+            <span class="col-title">הושלם</span>
+            <span class="col-count">{{ doneTasks().length }}</span>
+          </div>
+          <div class="col-body">
+            @for (task of doneTasks(); track task.id) {
+              <div [class]="'task-card ' + task.priority">
+                <p class="task-title">{{ task.title }}</p>
+                <div class="card-footer">
+                  <span [class]="'priority-badge ' + task.priority">{{ priorityLabel(task.priority) }}</span>
+                  <div class="card-footer-end">
+                    <select class="status-select" [value]="task.status"
+                            (change)="updateStatus(task, $any($event.target).value)">
+                      <option value="todo">לביצוע</option>
+                      <option value="in-progress">בביצוע</option>
+                      <option value="done">הושלם</option>
+                    </select>
+                    <button class="delete-btn" type="button" (click)="deleteTask(task.id)"
+                            [disabled]="deletingTaskId() === task.id">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2"
+                           stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                @if (taskErrors()[task.id]) {
+                  <p class="task-error">{{ taskErrors()[task.id] }}</p>
+                }
+              </div>
+            } @empty {
+              <p class="empty-col">אין משימות</p>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </main>
+
+  @if (isModalOpen()) {
+    <app-add-task-modal (closed)="closeModal()"/>
+  }
+</div>

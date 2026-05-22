@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/colors' as *;
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Rubik', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  direction: rtl;
+  text-align: right;
+  color: $text;
+  background: #f7fafc;
+  -webkit-font-smoothing: antialiased;
+}

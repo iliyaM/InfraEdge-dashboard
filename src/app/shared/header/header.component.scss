@@ -1,0 +1,48 @@
+@use '../../../styles/colors' as *;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+  background-color: $surface;
+  border-bottom: 1px solid $border;
+  box-shadow: 0 1px 4px $shadow;
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $primary;
+  letter-spacing: -0.5px;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.greeting {
+  font-size: 0.9rem;
+  color: $secondary;
+}
+
+.logout-btn {
+  padding: 0.375rem 1rem;
+  border: 1.5px solid $primary;
+  border-radius: 6px;
+  background-color: transparent;
+  color: $primary;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background-color: $primary;
+    color: $surface;
+  }
+}

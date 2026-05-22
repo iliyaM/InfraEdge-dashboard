@@ -1,0 +1,281 @@
+@use 'sass:color';
+@use '../../../styles/colors' as *;
+
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $page-bg;
+}
+
+.main {
+  padding: 1.5rem 2rem;
+  flex: 1;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.toolbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.board-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text;
+  margin: 0;
+}
+
+.new-task-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  background-color: $primary;
+  color: $surface;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: color.adjust($primary, $lightness: -8%);
+  }
+}
+
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: $secondary;
+  white-space: nowrap;
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  border: 1.5px solid $border;
+  background-color: transparent;
+  font-size: 0.8rem;
+  font-family: inherit;
+  color: $secondary;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover:not(.active) {
+    border-color: $primary;
+    color: $primary;
+  }
+
+  &.active {
+    background-color: $primary;
+    border-color: $primary;
+    color: $surface;
+  }
+
+  &.high.active {
+    background-color: $p-high;
+    border-color: $p-high;
+  }
+
+  &.medium.active {
+    background-color: $p-medium;
+    border-color: $p-medium;
+  }
+
+  &.low.active {
+    background-color: $p-low;
+    border-color: $p-low;
+  }
+}
+
+.state-msg {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $secondary;
+  font-size: 0.95rem;
+
+  &.error {
+    color: $danger;
+  }
+}
+
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  direction: ltr;
+  align-items: start;
+}
+
+.kanban-col {
+  background-color: $col-bg;
+  border-radius: 12px;
+}
+
+.col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem 0.75rem;
+  direction: rtl;
+  border-bottom: 1px solid rgba($border, 0.6);
+}
+
+.col-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: $text;
+}
+
+.col-count {
+  background-color: rgba($secondary, 0.15);
+  color: $secondary;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  min-width: 22px;
+  text-align: center;
+}
+
+.col-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  direction: rtl;
+  min-height: 80px;
+}
+
+.task-card {
+  background-color: $surface;
+  border-radius: 8px;
+  padding: 0.75rem 0.5rem 0.75rem 0.875rem;
+  box-shadow: 0 1px 3px $shadow;
+  border-right: 4px solid $border;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &.high { border-right-color: $p-high; }
+  &.medium { border-right-color: $p-medium; }
+  &.low { border-right-color: $p-low; }
+}
+
+.task-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $text;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card-footer-end {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid transparent;
+  color: rgba($secondary, 0.45);
+  cursor: pointer;
+  padding: 0.15rem;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+
+  &:hover:not(:disabled) {
+    color: $danger;
+    border-color: rgba($danger, 0.3);
+    background-color: rgba($danger, 0.06);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: rtl;
+}
+
+.priority-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+
+  &.high { background-color: rgba($p-high, 0.1); color: $p-high; }
+  &.medium { background-color: rgba($p-medium, 0.1); color: $p-medium; }
+  &.low { background-color: rgba($p-low, 0.1); color: $p-low; }
+}
+
+.status-select {
+  font-size: 0.7rem;
+  font-family: inherit;
+  color: $secondary;
+  background-color: transparent;
+  border: 1px solid $border;
+  border-radius: 4px;
+  padding: 0.15rem 0.375rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  direction: rtl;
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    color: $text;
+  }
+
+  &:hover {
+    border-color: color.adjust($border, $lightness: -15%);
+    color: $text;
+  }
+}
+
+.task-error {
+  font-size: 0.7rem;
+  color: $danger;
+  margin: 0.25rem 0 0;
+  text-align: center;
+}
+
+.empty-col {
+  font-size: 0.8rem;
+  color: rgba($secondary, 0.6);
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+  margin: 0;
+}

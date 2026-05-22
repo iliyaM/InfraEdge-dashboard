@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx ng *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Projects\\\\InfraEdge\" -Recurse -Name)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(Test-Path C:\\\\Projects\\\\InfraEdge\\\\README.md)"
+    ]
+  }
+}

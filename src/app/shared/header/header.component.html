@@ -1,0 +1,7 @@
+<header class="header">
+  <span class="brand">InfraEdge</span>
+  <div class="user-area">
+    <span class="greeting">שלום, {{ auth.loggedInUser()?.name }}</span>
+    <button class="logout-btn" (click)="logout()">התנתק</button>
+  </div>
+</header>

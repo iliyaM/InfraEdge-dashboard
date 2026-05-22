@@ -1,0 +1,48 @@
+<div class="login-page">
+  <div class="login-card">
+    <h1 class="brand">InfraEdge</h1>
+    <p class="subtitle">התחבר לחשבונך</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="email">דואר אלקטרוני</label>
+        <input
+          id="email"
+          type="email"
+          dir="ltr"
+          formControlName="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+        />
+        <span class="field-hint">alice&#64;example.com</span>
+        @if (form.controls['email'].invalid && form.controls['email'].touched) {
+          <span class="field-error">נא להזין כתובת דואר אלקטרוני תקינה</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">סיסמה</label>
+        <input
+          id="password"
+          type="password"
+          dir="ltr"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <span class="field-hint">alice123</span>
+        @if (form.controls['password'].invalid && form.controls['password'].touched) {
+          <span class="field-error">נא להזין סיסמה</span>
+        }
+      </div>
+
+      @if (error) {
+        <div class="alert" role="alert">{{ error }}</div>
+      }
+
+      <button type="submit" [disabled]="loading" class="submit-btn">
+        {{ loading ? 'מתחבר...' : 'התחבר' }}
+      </button>
+    </form>
+  </div>
+</div>
