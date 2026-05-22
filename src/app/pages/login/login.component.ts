@@ -1,4 +1,5 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -14,6 +15,7 @@ export class LoginComponent {
   private fb: FormBuilder = inject(FormBuilder);
   private auth: AuthService = inject(AuthService);
   private router: Router = inject(Router);
+  private destroyRef: DestroyRef = inject(DestroyRef);
 
   readonly form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -34,7 +36,7 @@ export class LoginComponent {
 
     const { email, password } = this.form.getRawValue();
 
-    this.auth.login(email, password).subscribe({
+    this.auth.login(email, password).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (e: Error) => {
         this.error.set(e.message || 'שגיאה בהתחברות');

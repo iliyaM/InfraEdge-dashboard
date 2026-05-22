@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, WritableSignal, Signal } from '@angular/core';
+import { Injectable, inject, signal, computed, WritableSignal, Signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 import { User } from '../interfaces/user.interface';
@@ -12,7 +12,7 @@ export class AuthService {
   readonly isAuthenticated: Signal<boolean> = computed(() => this._loggedInUser() !== null);
   readonly token: Signal<string | null> = computed(() => this._loggedInUser()?.token ?? null);
 
-  constructor(private http: HttpClient) {}
+  private http: HttpClient = inject(HttpClient);
 
   login(email: string, password: string): Observable<User> {
     const params: HttpParams = new HttpParams()

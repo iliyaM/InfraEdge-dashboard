@@ -54,4 +54,8 @@ export class TaskService {
         this._tasks.update((all: Task[]) => all.filter((t: Task) => t.id !== id))
       ));
   }
+
+  refreshTask(task: Task): void {
+    this._tasks.update((all: Task[]) => all.map((t: Task) => t.id === task.id ? { ...task } : t));
+  }
 }

@@ -3,8 +3,8 @@
   <div class="card-footer">
     <span [class]="'priority-badge ' + task.priority">{{ priorityLabel(task.priority) }}</span>
     <div class="card-footer-end">
-      <select class="status-select" [value]="task.status"
-              (change)="statusChange.emit($any($event.target).value)">
+      <select class="status-select" [value]="displayStatus()"
+              (change)="onStatusChange($any($event.target).value)">
         <option value="todo">לביצוע</option>
         <option value="in-progress">בביצוע</option>
         <option value="done">הושלם</option>

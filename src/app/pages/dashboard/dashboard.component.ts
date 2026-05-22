@@ -55,7 +55,10 @@ export class DashboardComponent implements OnInit {
   updateStatus(task: Task, status: TaskStatus): void {
     this.taskService.updateTaskStatus(task.id, status)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({ error: () => this.actionError.set(`"${task.title}" לא עודכן, נסה שוב`) });
+      .subscribe({ error: () => {
+        this.taskService.refreshTask(task);
+        this.actionError.set(`"${task.title}" לא עודכן, נסה שוב`);
+      } });
   }
 
   deleteTask(task: Task): void {
